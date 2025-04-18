@@ -1,10 +1,11 @@
 #include "MCreatorLink.h"
 
-const int buzzer = 10;
+const int buzzer = 9;
 
-const int red = 3;
-const int green = 5;
-const int blue = 6;
+const int red = 2;
+const int green = 4;
+const int blue = 5;
+const int ground = 3;
 
 void dataEvent(String command, String data) {
   if (data.equals("w")) {
@@ -48,8 +49,8 @@ void setup() {
   
   pinMode(8, OUTPUT);
   digitalWrite(8, LOW);
-  pinMode(4, OUTPUT);
-  digitalWrite(4, LOW);
+  pinMode(ground, OUTPUT);
+  digitalWrite(ground, LOW);
 
   Serial.begin(115200);
   Serial.setTimeout(20);
