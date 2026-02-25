@@ -1,16 +1,22 @@
 int groundSpeed = 255;
 
+#define MOTORL1 18
+#define MOTORL2 19
+#define MOTORR1 21
+#define MOTORR2 22
+#define LED 2
+
 void setup() {
   Serial.begin(9600);
   Serial.setTimeout(10);
 
-  pinMode(3, OUTPUT);
-  pinMode(5, OUTPUT);
-  pinMode(6, OUTPUT);
-  pinMode(9, OUTPUT);
-  pinMode(13, OUTPUT);
+  pinMode(MOTORL1, OUTPUT);
+  pinMode(MOTORL2, OUTPUT);
+  pinMode(MOTORR1, OUTPUT);
+  pinMode(MOTORR2, OUTPUT);
+  pinMode(LED, OUTPUT);
 }
- 
+
 void loop() {
   char output = Serial.read();//store the serial signal comming from the bluetooth serial port as a character variable
   int outputInt = (char)output;
@@ -24,17 +30,17 @@ void loop() {
   }
   if(output == 'S')//Standby Mode
   {
-    analogWrite(3, 0);//the same as digitalWrite(3, LOW);
-    analogWrite(5, 0);
-    analogWrite(6, 0);
-    analogWrite(9, 0);
+    analogWrite(MOTORL1, 0);//the same as digitalWrite(MOTORL1, LOW);
+    analogWrite(MOTORL2, 0);
+    analogWrite(MOTORR1, 0);
+    analogWrite(MOTORR2, 0);
   }
   else if(output == 'D')//Disconnected
   {
-    analogWrite(3, 0);
-    analogWrite(5, 0);
-    analogWrite(6, 0);
-    analogWrite(9, 0);
+    analogWrite(MOTORL1, 0);
+    analogWrite(MOTORL2, 0);
+    analogWrite(MOTORR1, 0);
+    analogWrite(MOTORR2, 0);
     return;
   }
   else if(output == 'q')//Full Speed
@@ -43,59 +49,69 @@ void loop() {
   }
   else if(output == 'F')//Forward
   {
-    analogWrite(3, groundSpeed);
-    analogWrite(5, 0);
-    analogWrite(6, groundSpeed);
-    analogWrite(9, 0);
+    analogWrite(MOTORL1, groundSpeed);
+    analogWrite(MOTORL2, 0);
+    analogWrite(MOTORR1, groundSpeed);
+    analogWrite(MOTORR2, 0);
+
+    delay(2000);
+
+    analogWrite(MOTORL1, 0);
+    analogWrite(MOTORR1, 0);
   }
   else if(output == 'B')//Backwards
   {
-    analogWrite(3, 0);
-    analogWrite(5, groundSpeed);
-    analogWrite(6, 0);
-    analogWrite(9, groundSpeed);
+    analogWrite(MOTORL1, 0);
+    analogWrite(MOTORL2, groundSpeed);
+    analogWrite(MOTORR1, 0);
+    analogWrite(MOTORR2, groundSpeed);
+
+    delay(2000);
+
+    analogWrite(MOTORL2, 0);
+    analogWrite(MOTORR2, 0);
   }
   else if(output == 'L')//Turn Left
   {
-    analogWrite(3, 0);
-    analogWrite(5, 0);
-    analogWrite(6, groundSpeed);
-    analogWrite(9, 0);
+    analogWrite(MOTORL1, 0);
+    analogWrite(MOTORL2, 0);
+    analogWrite(MOTORR1, groundSpeed);
+    analogWrite(MOTORR2, 0);
   }
   else if(output == 'R')//Turn Right
   {
-    analogWrite(3, groundSpeed);
-    analogWrite(5, 0);
-    analogWrite(6, 0);
-    analogWrite(9, 0);
+    analogWrite(MOTORL1, groundSpeed);
+    analogWrite(MOTORL2, 0);
+    analogWrite(MOTORR1, 0);
+    analogWrite(MOTORR2, 0);
   }
   else if(output == 'G')//Forward Turning Left
   {
-    analogWrite(3, groundSpeed / 4);
-    analogWrite(5, 0);
-    analogWrite(6, groundSpeed);
-    analogWrite(9, 0);
+    analogWrite(MOTORL1, groundSpeed / 4);
+    analogWrite(MOTORL2, 0);
+    analogWrite(MOTORR1, groundSpeed);
+    analogWrite(MOTORR2, 0);
   }
   else if(output == 'I')//Forward Turning Right
   {
-    analogWrite(3, groundSpeed);
-    analogWrite(5, 0);
-    analogWrite(6, groundSpeed / 4);
-    analogWrite(9, 0);
+    analogWrite(MOTORL1, groundSpeed);
+    analogWrite(MOTORL2, 0);
+    analogWrite(MOTORR1, groundSpeed / 4);
+    analogWrite(MOTORR2, 0);
   }
   else if(output == 'H')//Backward Turning Left
   {
-    analogWrite(3, 0);
-    analogWrite(5, groundSpeed / 4);
-    analogWrite(6, 0);
-    analogWrite(9, groundSpeed);
+    analogWrite(MOTORL1, 0);
+    analogWrite(MOTORL2, groundSpeed / 4);
+    analogWrite(MOTORR1, 0);
+    analogWrite(MOTORR2, groundSpeed);
   }
   else if(output == 'J')//Backward Turning Right
   {
-    analogWrite(3, 0);
-    analogWrite(5, groundSpeed);
-    analogWrite(6, 0);
-    analogWrite(9, groundSpeed / 4);
+    analogWrite(MOTORL1, 0);
+    analogWrite(MOTORL2, groundSpeed);
+    analogWrite(MOTORR1, 0);
+    analogWrite(MOTORR2, groundSpeed / 4);
   }
   //Horn Control
   else if(output == 'V')
@@ -109,9 +125,9 @@ void loop() {
   
   //Light Control
   else if(output == 'W')
-  {digitalWrite(13, HIGH);}
+  {digitalWrite(LED, HIGH);}
   else if(output == 'w')
-  {digitalWrite(13, LOW);}
+  {digitalWrite(LED, LOW);}
   
   while(Serial.available() == 0){/*Do nothing while the bluetooth serial port isn't sending any data*/}
 }
